@@ -22,7 +22,7 @@ Passionate about automation and the DevOps mentality. Particularly focused on in
   : Integrating as a contributing member to a development scrum team, while maintaining Ops alert/uptime responsibilities.
 
 * Uptime
-  : Identifying and refactoring hardware/software single point of failures and potential pain points.
+  : Identifying and refactoring hardware/software weakpoints and scaling the critical pieces to provide high availability and disaster recovery plans.
 
 -------
 
