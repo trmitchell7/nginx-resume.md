@@ -36,6 +36,7 @@ RUN printf '#!/bin/bash\nxvfb-run --server-args="-screen 0, 1024x768x24" /usr/bi
 RUN git clone https://github.com/there4/markdown-resume.git
 
 ## copy in your resume.md file
+## this will change to a volume when I get 20 minutes to test it
 COPY resume.md ./markdown-resume/examples/source/resume.md
 
 ## use Craig's tool to create the webpage and pdf
