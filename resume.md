@@ -48,15 +48,14 @@ Cision Inc.
  - Principal Ops on team to update scattered build environment into atlassian stack heavily using stash, bamboo, jira, and confluence
  - Lead the charge to migrate automated testing from a troublesome persistent dev environment into an automated container environment
  - Identified single points of failure and slow engineering workflows for acquired companies, suggested improvements
- - Official scrum training with engineering peers, familiar with the ins-and-outs of successful engineering team dynamics.
- - Analyzed and moved some servers into AWS and Joyent for cost savings and hardware consolidation
+ - Official scrum training with engineering peers, familiar with the ins-and-outs of successful engineering team dynamics
 
 
 Visible Technologies
 : *Systems Engineer*  
   __2012-2014__  
 
- - Configured, automated, and maintained large environments on bare metal running Linux and Windows.
+ - Configured, automated, and maintained large environments on bare metal running Linux and Windows
  - Integral to redesign of entire production networking and server infrastructure to save several hundred thousand dollars per year while drastically increasing capacity and scalability
  - significant work on design, scripting, and execution of zero-downtime continuous integration using F5 load balancers
  - Configured and supported CentOS/Ubuntu environments running Kafka, Hadoop, HBase, Reverse Lucene, Memcached, MongoDB, MySQL, Nagios, Ansible, Puppet, NTPd, postfix SMTP, DHCP integrated with a windows infrastructure running MSSQL, IIS, SMTP, DC, DNS
