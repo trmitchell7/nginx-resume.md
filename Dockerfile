@@ -16,6 +16,9 @@ ENV NGINX_DOMAIN localhost
 ## template options: modern, blockish, unstyled, readable, swissen - defaults to readable
 ENV TEMPLATE readable
 
+## option for google analytics tag
+ENV ANALYTICS UA-00000000-1
+
 ## Configure nginx, copies default HTTP/html site to whatever domain is specified by NGINX_DOMAIN env. variable
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log && \
@@ -44,7 +47,7 @@ RUN ./markdown-resume/bin/md2resume html -t $TEMPLATE ./markdown-resume/examples
     ./markdown-resume/bin/md2resume pdf -t $TEMPLATE ./markdown-resume/examples/source/resume.md /var/www/$NGINX_DOMAIN/html
 
 ## Add google analytics
-RUN echo -e "<script>\n\t(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n\t(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n\tm=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n\t})(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n\n\tga('create', 'UA-64799259-1', 'auto');\n\tga('send', 'pageview');\n\n</script>" >> /var/www/$NGINX_DOMAIN/html/resume.html
+RUN echo -e "<script>\n\t(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n\t(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n\tm=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n\t})(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n\n\tga('create', '$ANALYTICS', 'auto');\n\tga('send', 'pageview');\n\n</script>" >> /var/www/$NGINX_DOMAIN/html/resume.html
 
 EXPOSE 80
 
