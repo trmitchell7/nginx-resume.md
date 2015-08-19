@@ -2,33 +2,36 @@ FROM debian:latest
 
 MAINTAINER Thomas Mitchell
 
-## Install Nginx, git, and markdown-resume tools
+## Install Nginx, git, PDF generator, supervisor, and Openresty
 RUN export DEBIAN_FRONTEND=noninteractive && \
     echo "deb http://nginx.org/packages/ubuntu/ trusty nginx" > /etc/apt/sources.list.d/nginx.list && \
     echo "deb-src http://nginx.org/packages/ubuntu/ trusty nginx" >> /etc/apt/sources.list.d/nginx.list && \
     apt-key adv --fetch-keys "http://nginx.org/keys/nginx_signing.key" &&  \
     apt-get update && \
-    apt-get -y install nginx git php5 wkhtmltopdf xvfb
+    apt-get -y install nginx wget git php5 supervisor wkhtmltopdf xvfb libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make build-essential
+
+## Compile openresty from source.
+RUN wget http://openresty.org/download/ngx_openresty-1.7.10.2.tar.gz && \
+    tar -xzvf ngx_openresty-*.tar.gz && \
+    rm -f ngx_openresty-*.tar.gz && \
+    cd ngx_openresty-* && \
+    ./configure --with-pcre-jit --with-ipv6 && \
+    make && \
+    make install && \
+    make clean && \
+    cd .. && \
+    rm -rf ngx_openresty-*&& \
+    ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx && \
+    ldconfig
 
 ## variable for your domain name, example: mysite.com (do no include the www.)
 ENV NGINX_DOMAIN localhost
 
-## template options: modern, blockish, unstyled, readable, swissen - defaults to readable
+## template options: modern, blockish, unstyled, readable, swissen - change here and rebuild container
 ENV TEMPLATE readable
 
 ## option for google analytics tag
 ENV ANALYTICS UA-00000000-1
-
-## Configure nginx, copies default HTTP/html site to whatever domain is specified by NGINX_DOMAIN env. variable
-RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
-    ln -sf /dev/stderr /var/log/nginx/error.log && \
-    mkdir -p /var/www/$NGINX_DOMAIN/html /etc/nginx/sites-available /etc/nginx/sites-enabled && \
-    sed -i 's:include /etc/nginx/conf.d/.*$:include /etc/nginx/conf.d/*.conf;\n    include /etc/nginx/sites-enabled/*;:g' /etc/nginx/nginx.conf && \
-    ln -s /etc/nginx/sites-available/$NGINX_DOMAIN.conf /etc/nginx/sites-enabled/$NGINX_DOMAIN.conf && \
-    sed -i 's/index.html index.htm/resume.html/g' /etc/nginx/conf.d/default.conf && \
-    sed -i "s/localhost/$NGINX_DOMAIN www.$NGINX_DOMAIN/g" /etc/nginx/conf.d/default.conf && \
-    sed -i "0,/\/usr\/share\/nginx\/html/s//\/var\/www\/$NGINX_DOMAIN\/html/" /etc/nginx/conf.d/default.conf && \
-    mv /etc/nginx/conf.d/default.conf /etc/nginx/sites-available/$NGINX_DOMAIN.conf
 
 ## configure wkhtmltopdf to work without running X, only important for generating PDFs.
 RUN printf '#!/bin/bash\nxvfb-run --server-args="-screen 0, 1024x768x24" /usr/bin/wkhtmltopdf $*' > /usr/bin/wkhtmltopdf.sh && \
@@ -38,17 +41,9 @@ RUN printf '#!/bin/bash\nxvfb-run --server-args="-screen 0, 1024x768x24" /usr/bi
 ## Thanks to Craig Davis for creating this!
 RUN git clone https://github.com/there4/markdown-resume.git
 
-## copy in your resume.md file
-## this will change to a volume when I get 20 minutes to test it
-COPY resume.md ./markdown-resume/examples/source/resume.md
-
-## use Craig's tool to create the webpage and pdf
-RUN ./markdown-resume/bin/md2resume html -t $TEMPLATE ./markdown-resume/examples/source/resume.md /var/www/$NGINX_DOMAIN/html && \
-    ./markdown-resume/bin/md2resume pdf -t $TEMPLATE ./markdown-resume/examples/source/resume.md /var/www/$NGINX_DOMAIN/html
-
-## Add google analytics
-RUN echo "<script>\n\t(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n\t(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n\tm=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n\t})(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n\n\tga('create', '$ANALYTICS', 'auto');\n\tga('send', 'pageview');\n\n</script>" >> /var/www/$NGINX_DOMAIN/html/resume.html
-
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY run.sh /run.sh
+
+CMD ["/usr/bin/supervisord"]
