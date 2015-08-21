@@ -13,23 +13,24 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 ## variable for your domain name, example: mysite.com (do no include the www.)
 ENV NGINX_DOMAIN localhost
 
-## template options: modern, blockish, unstyled, readable, swissen - defaults to readable
+## template options: modern, blockish, unstyled, readable, swissen
 ENV TEMPLATE readable
 
-## option for google analytics tag
-ENV ANALYTICS UA-00000000-1
+## option for google analytics ID
+ENV ANALYTICS UA-XXXXXXXX-1
 
 ## configure wkhtmltopdf to work without running X, only important for generating PDFs.
 RUN printf '#!/bin/bash\nxvfb-run --server-args="-screen 0, 1024x768x24" /usr/bin/wkhtmltopdf $*' > /usr/bin/wkhtmltopdf.sh && \
     chmod a+x /usr/bin/wkhtmltopdf.sh && \
     ln -s /usr/bin/wkhtmltopdf.sh /usr/local/bin/wkhtmltopdf
 
-## clone Craig Davis's markdown to html scripts
+## clone Craig Davis's markdown2html scripts
 RUN git clone https://github.com/there4/markdown-resume.git
 
 EXPOSE 80
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY run.sh /run.sh
+COPY supervisord.conf /etc/supervisor/conf.d/
+COPY run.sh /
+COPY sample.md /volume/
 
 CMD ["/usr/bin/supervisord"]
