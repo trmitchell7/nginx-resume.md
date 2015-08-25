@@ -1,8 +1,8 @@
 # Erlich Bachman
 ## Founder, Investor, Innovator
 
-> [Download PDF](resume.pdf)
-> [erlich.bachman@aviato.com](erlich.bachman@aviato.com)
+> [Download PDF](resume.pdf)  
+> [erlich.bachman@aviato.com](erlich.bachman@aviato.com)  
 > (999) 999-9999
 
 ------

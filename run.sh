@@ -10,7 +10,6 @@ then
     NGINX_DOMAIN=${NGINX_DOMAIN%%/*}
     echo worked
 fi
-echo "${NGINX_LOC}   ${NGINX_DOMAIN}"
 
 ## log no-daemon to var/log
 mkdir -p /var/www/resume/html /etc/nginx/sites-available /etc/nginx/sites-enabled /volume
