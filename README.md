@@ -1,22 +1,41 @@
 # nginx-resume.md
-Docker to generate nginx hosted page with markdown resume templates, using github.com/there4/markdown-resume
+Docker to host a static resume page from any resume in markdown format, using github.com/there4/markdown-resume to generate html
 
 > This was thrown together quickly so... no promises.
 
-##### Before running compare the layout of your resume.md to the sample and get that sorted. ;)
+---
+
+### Setup
+1. Write your resume in markdown format matching the style of the sample.md
+2. put your resume.md file in a ~/volume/ folder exposed to the docker
+3. (sign up here)[https://www.google.com/analytics/sign_up.html] (completely optional)
 
 ---
 
-1. first you'll need to build the docker locally (it grabs the resume on build)
+### Run the server
+
+2. Run with defaults: (localhost, readable template, sample.md)
 ```bash
-docker build -t trmitchell7/nginx-resume.md .
+docker run -d -p 80:80 trmitchell7/nginx-resume.md
 ```
-2. Run with defaults: (localhost and readable template)
+3. Test it at http://localhost:80
+4. Run on your site: (don't put www. in the NGINX_DOMAIN)
 ```bash
-docker run -d -p 80:80 trmitchell7/nginx-resume.md:latest
+docker run -d -p 80:80 \
+    -v /local/path/for/resume:/volume \
+    -e NGINX_DOMAIN=mysite.com \
+    -e ANALYTICS=UA-XXXXXXXX-1 \
+    -e TEMPLATE=readable
+    --name=resume_site trmitchell7/nginx-resume.md
 ```
-3. test it at localhost:80
-4. Run with options: (make sure you don't put www. in the domain)
-```bash
-docker run -d -p 80:80 --name=resume_site -e NGINX_DOMAIN=thomas.ninja -e TEMPLATE=swissen trmitchell7/nginx-resume.md:latest
-```
+5. deploy to Joyent triton with: ...
+
+---
+
+### Options
+
+Environmental variables:
+
+- $TEMPLATE (this can be: modern, blockish, unstyled, readable, swissen)
+- $NGINX_DOMAIN (the name of your site, i.e. mysite.com or mysite.com/resume - you can give it a specific location)
+- $ANALYTICS (Your google analytics ID, allowing you to easily count views)
