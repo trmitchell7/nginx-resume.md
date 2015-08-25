@@ -23,7 +23,7 @@ docker run -d -p 80:80 \
     -v /local/path/for/resume:/volume \
     -e NGINX_DOMAIN=mysite.com \
     -e ANALYTICS=UA-XXXXXXXX-1 \
-    -e TEMPLATE=readable
+    -e TEMPLATE=readable \
     --name=resume_site trmitchell7/nginx-resume.md:latest
 ```
 ---
