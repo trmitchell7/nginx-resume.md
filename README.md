@@ -6,7 +6,7 @@ Easy way to host your resume on a website.
 ### Setup
 1. Write your resume in markdown format matching the style of the sample.md
 2. put your resume.md file in a ~/volume/ folder exposed to the docker
-3. Get a (google analytics ID)[https://www.google.com/analytics/sign_up.html] (completely optional)
+3. Get a [google analytics ID](https://www.google.com/analytics/sign_up.html) (completely optional)
 
 ---
 
@@ -17,7 +17,7 @@ Easy way to host your resume on a website.
 docker run -d -p 80:80 trmitchell7/nginx-resume.md:latest
 ```
 3. Test it at http://localhost:80
-4. Run on your site: (don't put www. in the NGINX_DOMAIN)
+4. Run on your site: (don't put www in the NGINX_DOMAIN)
 ```bash
 docker run -d -p 80:80 \
     -v /local/path/for/resume:/volume \
@@ -41,12 +41,12 @@ Environmental variables:
 ### Deploying to your own website
 
 1. We'll use Triton since it's convenient and cheaper than AWS
-2. Go to (Triton)[https://my.joyent.com/main/#!/docker/containers]
-3. Create (new container host)[https://my.joyent.com/main/#!/docker/container/create]
+2. Go to [Triton](https://my.joyent.com/main/#!/docker/containers)
+3. Create [new container host](https://my.joyent.com/main/#!/docker/container/create)
     - size: I chose the smallest available for this, it's cheaper that way ;)
     - image: trmitchell7/nginx-resume.md:latest
     - PORTS: 80 (otherwise all ports are open)
-    - VOLUMES: http://www.dropbox.com/s/qyzxtu05rlwj39x/resume.md?dl=1:/volume
+    - VOLUMES: http://www.dropbox.com/s/xxxxxxxxx/resume.md?dl=1:/volume
         - (dropbox is really easy here, just change the dl=0 to dl=1)
     - ENV: NGINX_DOMAIN=mysite.com/resume
         - (you can set it to an arbitrary location)
