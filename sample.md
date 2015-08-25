@@ -1,8 +1,8 @@
 # Erlich Bachman
 ## Founder, Investor, Innovator
 
-> [Download PDF](resume.pdf)
-> [erlich.bachman@aviato.com](erlich.bachman@aviato.com)
+> [Download PDF](resume.pdf)  
+> [erlich.bachman@aviato.com](erlich.bachman@aviato.com)  
 > (999) 999-9999
 
 ------
@@ -40,13 +40,14 @@ Progressively using marijuana to synergize strategic thinking inside and outside
 ### Experience {#experience}
 
 Pied Piper
-: *10% shareholder*
-  __2015-present__
+: *10% shareholder*  
+  __2015-present__  
   Energistically instrumental to the intellectual growth through assertive tactical initiatives
 
+
 Aviato
-: *Founder*
-  __2004-2008__
+: *Founder*  
+  __2004-2008__  
   Money, fancy clothes, and universal respect of all the ladies
 
 ------

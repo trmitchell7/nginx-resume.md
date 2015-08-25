@@ -33,6 +33,4 @@ COPY supervisord.conf /etc/supervisor/conf.d/
 COPY run.sh /
 COPY sample.md /volume/
 
-RUN chmod +x /run.sh
-
 CMD ["/usr/bin/supervisord"]
