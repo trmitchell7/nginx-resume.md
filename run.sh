@@ -8,22 +8,41 @@ if echo "${NGINX_DOMAIN}" | grep "/" 2>&1 >/dev/null ;
 then
     NGINX_LOC=${NGINX_DOMAIN#*/}
     NGINX_DOMAIN=${NGINX_DOMAIN%%/*}
+    echo worked
 fi
+echo "${NGINX_LOC}   ${NGINX_DOMAIN}"
 
 ## log no-daemon to var/log
 mkdir -p /var/www/resume/html /etc/nginx/sites-available /etc/nginx/sites-enabled /volume
 ln -sf /dev/stdout /var/log/nginx/access.log
 ln -sf /dev/stderr /var/log/nginx/error.log
+rm /etc/nginx/conf.d/default.conf
 
 ## modify default config to suit us
 sed -i 's:include /etc/nginx/conf.d/.*$:include /etc/nginx/conf.d/*.conf;\n    include /etc/nginx/sites-enabled/*;:g' /etc/nginx/nginx.conf
-ln -s /etc/nginx/sites-available/resume.conf /etc/nginx/sites-enabled/resume.conf
-sed -i 's/index  index.html index.htm/alias \/var\/www\/resume\/html\/resume.html/g' /etc/nginx/conf.d/default.conf
-sed -i "0,/root   \/usr\/share\/nginx\/html/s//default_type html/" /etc/nginx/conf.d/default.conf
-sed -i "s>localhost>${NGINX_DOMAIN} www.${NGINX_DOMAIN}>g" /etc/nginx/conf.d/default.conf
-sed -i "s>location />location /${NGINX_LOC}>g" /etc/nginx/conf.d/default.conf
+ln -s /etc/nginx/sites-enabled/resume.conf /etc/nginx/sites-available/resume.conf
+cat > /etc/nginx/sites-available/resume.conf << EOF
+server {
+    listen       80;
+    server_name  ${NGINX_DOMAIN} www.${NGINX_DOMAIN};
 
-mv /etc/nginx/conf.d/default.conf /etc/nginx/sites-available/resume.conf
+    root /var/www/resume/html/;
+    index resume.html;
+
+    location ~ /${NGINX_LOC} {
+        try_files \$uri \$uri/ /resume.html;
+    }
+
+    location ~ \.(pdf) {
+         alias /var/www/resume/html/resume.pdf;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+EOF
 
 ## copy in your resume.md file to the volume
 if [ ! -s /volume/resume.md ];
@@ -41,6 +60,5 @@ echo "<script>\n\t(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r
 
 ## reload nginx to make sure that the config changes all made it in (required because supervisord starts them simultaneously)
 sleep 2 && nginx -s stop
-sleep 2 && nginx -s reload
 
-echo -e "Finished with run.sh"
+echo -e "INFO: run.sh script finished."
